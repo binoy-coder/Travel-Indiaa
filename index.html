@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bharat Yatra — Plan Your India Journey</title>
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --indigo: #1B2A4A;
+    --indigo-deep: #101a30;
+    --marigold: #E8A33D;
+    --marigold-deep: #C97F1C;
+    --rust: #C4522E;
+    --peacock: #0F6B5C;
+    --cream: #FBF3E7;
+    --paper: #FFFCF6;
+    --ink: #23180F;
+    --ink-soft: #5A4C3E;
+    --line: rgba(35,24,15,0.14);
+    --line-strong: rgba(35,24,15,0.28);
+
+    --font-display: 'Fraunces Sub', Georgia, 'Times New Roman', serif;
+    --font-body: 'Body Sans', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-mono: 'Mono Sub', 'Courier New', monospace;
+
+    --radius: 4px;
+    --shadow-card: 0 1px 2px rgba(35,24,15,0.06), 0 8px 24px -12px rgba(35,24,15,0.18);
+  }
+
+  /* Self-hosted-feel stacks using widely available system fonts, tuned via font-feature settings for character */
+  @font-face{
+    font-family:'Fraunces Sub';
+    src: local('Georgia');
+    font-weight: 400 700;
+  }
+  @font-face{
+    font-family:'Body Sans';
+    src: local('Segoe UI'), local('Helvetica Neue');
+  }
+  @font-face{
+    font-family:'Mono Sub';
+    src: local('Consolas'), local('Menlo');
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer;}
+  :focus-visible{outline:3px solid var(--peacock); outline-offset:2px;}
+
+  h1,h2,h3,h4{font-family:var(--font-display); font-weight:700; letter-spacing:-0.01em; color:var(--indigo-deep);}
+  .eyebrow{
+    font-family:var(--font-mono);
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    font-size:0.72rem;
+    color:var(--rust);
+    font-weight:700;
+  }
+
+  .wrap{max-width:1160px; margin:0 auto; padding:0 24px;}
+
+  /* ============ JALI PATTERN BACKDROP ============ */
+  .jali{
+    position:absolute; inset:0; opacity:0.06; pointer-events:none;
+    background-image: radial-gradient(circle at 10px 10px, var(--indigo) 2px, transparent 2.4px);
+    background-size: 26px 26px;
+  }
+
+  /* ============ HEADER / TAB NAV ============ */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:var(--indigo-deep);
+    border-bottom:3px solid var(--marigold);
+  }
+  .top-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; max-width:1160px; margin:0 auto;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--cream); text-decoration:none;
+  }
+  .brand-mark{
+    width:34px; height:34px; border-radius:50%;
+    background:conic-gradient(from 45deg, var(--marigold), var(--rust), var(--peacock), var(--marigold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:700; color:var(--indigo-deep); font-size:1rem;
+  }
+  .brand-name{font-family:var(--font-display); font-size:1.25rem; font-weight:700;}
+  .brand-name em{font-style:normal; color:var(--marigold);}
+
+  .tabs-scroll{
+    background:var(--indigo);
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .tabs{
+    display:flex; gap:2px; max-width:1160px; margin:0 auto; padding:0 24px;
+    list-style:none; white-space:nowrap;
+  }
+  .tabs button{
+    background:none; border:none; color:rgba(251,243,231,0.68);
+    font-family:var(--font-mono); font-size:0.78rem; letter-spacing:0.04em; text-transform:uppercase;
+    padding:13px 14px; border-bottom:3px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .tabs button:hover{color:var(--cream);}
+  .tabs button.active{color:var(--marigold); border-bottom-color:var(--marigold); font-weight:700;}
+
+  .book-cta{
+    background:var(--rust); color:var(--paper); border:none;
+    font-family:var(--font-mono); font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase;
+    padding:10px 18px; border-radius:2px; white-space:nowrap;
+  }
+  .book-cta:hover{background:#a3411f;}
+
+  /* ============ PANELS ============ */
+  .panel{display:none; animation:fade .35s ease;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  section{padding:64px 0;}
+  section + section{border-top:1px solid var(--line);}
+  .section-head{max-width:640px; margin-bottom:40px;}
+  .section-head h2{font-size:2rem; margin-top:8px;}
+  .section-head p{color:var(--ink-soft); margin-top:10px; font-size:1.02rem;}
+
+  /* ============ HOME / HERO ============ */
+  .hero{
+    position:relative; overflow:hidden;
+    background:var(--indigo-deep); color:var(--cream); padding:96px 0 80px;
+  }
+  .hero .wrap{position:relative; z-index:2;}
+  .hero-grid{display:grid; grid-template-columns:1.15fr 0.85fr; gap:48px; align-items:center;}
+  .hero h1{
+    color:var(--cream); font-size:clamp(2.4rem, 5vw, 3.6rem); line-height:1.05; margin-top:14px;
+  }
+  .hero h1 span{color:var(--marigold);}
+  .hero p.lede{color:rgba(251,243,231,0.78); font-size:1.1rem; max-width:46ch; margin-top:18px;}
+  .hero-actions{display:flex; gap:14px; margin-top:32px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--marigold); color:var(--indigo-deep); border:none; font-weight:700;
+    padding:14px 26px; border-radius:2px; font-size:0.95rem;
+  }
+  .btn-primary:hover{background:#f0b559;}
+  .btn-ghost{
+    background:none; border:1.5px solid rgba(251,243,231,0.4); color:var(--cream);
+    padding:14px 26px; border-radius:2px; font-size:0.95rem;
+  }
+  .btn-ghost:hover{border-color:var(--marigold); color:var(--marigold);}
+
+  .hero-stat-card{
+    background:rgba(251,243,231,0.05); border:1px solid rgba(251,243,231,0.18);
+    border-radius:6px; padding:22px; backdrop-filter:blur(4px);
+  }
+  .hero-stat-card + .hero-stat-card{margin-top:14px;}
+  .hero-stat-card .num{font-family:var(--font-display); font-size:2rem; color:var(--marigold);}
+  .hero-stat-card .label{font-size:0.85rem; color:rgba(251,243,231,0.7); margin-top:2px;}
+
+  .home-highlights{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .h-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:26px;
+    box-shadow:var(--shadow-card);
+  }
+  .h-card .glyph{
+    width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:var(--cream); border:1px solid var(--line); margin-bottom:14px; font-size:1.2rem;
+  }
+  .h-card h3{font-size:1.15rem; margin-bottom:6px;}
+  .h-card p{color:var(--ink-soft); font-size:0.94rem;}
+
+  /* ============ CARDS GRID (generic) ============ */
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:24px;}
+
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:6px; overflow:hidden;
+    box-shadow:var(--shadow-card);
+  }
+  .card-art{
+    height:150px; position:relative;
+    display:flex; align-items:flex-end; padding:16px;
+  }
+  .card-art .region-tag{
+    font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
+    background:rgba(16,26,48,0.55); color:var(--cream); padding:4px 9px; border-radius:2px;
+  }
+  .card-body{padding:20px;}
+  .card-body h3{font-size:1.2rem;}
+  .card-body .meta{color:var(--ink-soft); font-size:0.88rem; margin-top:6px;}
+  .card-body p{font-size:0.92rem; color:var(--ink-soft); margin-top:10px;}
+
+  .tag-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+  .tag{
+    font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.05em;
+    padding:4px 8px; border-radius:2px; border:1px solid var(--line-strong); color:var(--ink-soft);
+  }
+  .tag.food-yes{border-color:var(--peacock); color:var(--peacock);}
+  .tag.food-no{border-color:var(--rust); color:var(--rust);}
+  .tag.food-part{border-color:var(--marigold-deep); color:var(--marigold-deep);}
+
+  .link-more{
+    display:inline-flex; align-items:center; gap:6px; margin-top:16px;
+    font-family:var(--font-mono); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--indigo); border:none; background:none; padding:0; border-bottom:1px solid var(--indigo);
+  }
+  .link-more:hover{color:var(--rust); border-color:var(--rust);}
+
+  /* Destination art gradients per region */
+  .art-north{background:linear-gradient(135deg,#2b3a63,#8d5a3a);}
+  .art-west{background:linear-gradient(135deg,#a3441f,#e8a33d);}
+  .art-south{background:linear-gradient(135deg,#0f6b5c,#1b2a4a);}
+  .art-himalaya{background:linear-gradient(135deg,#3a4a75,#7d8fb0);}
+  .art-east{background:linear-gradient(135deg,#6b3f1f,#c4522e);}
+  .art-desert{background:linear-gradient(135deg,#c97f1c,#7a3a1a);}
+
+  .detail-panel{
+    display:none; margin-top:18px; padding:22px;
+    background:var(--cream); border:1px dashed var(--line-strong); border-radius:6px;
+  }
+  .detail-panel.open{display:block;}
+  .detail-panel h4{font-size:1rem; margin-top:14px; color:var(--indigo);}
+  .detail-panel h4:first-child{margin-top:0;}
+  .detail-panel ul{margin:8px 0 0 18px; color:var(--ink-soft); font-size:0.92rem;}
+  .detail-panel ul li{margin-bottom:4px;}
+
+  /* ============ FORM (Registration) ============ */
+  .form-shell{
+    max-width:640px; background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:36px; box-shadow:var(--shadow-card);
+  }
+  .steps{display:flex; gap:6px; margin-bottom:30px;}
+  .steps .step{
+    flex:1; height:4px; background:var(--line); border-radius:2px; position:relative;
+  }
+  .steps .step.done{background:var(--peacock);}
+  .steps .step.current{background:var(--marigold);}
+  .step-labels{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.72rem;
+    text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft); margin-bottom:8px;}
+
+  .form-step{display:none;}
+  .form-step.active{display:block; animation:fade .3s ease;}
+  .field{margin-bottom:20px;}
+  .field label{display:block; font-size:0.86rem; font-weight:600; margin-bottom:6px; color:var(--indigo-deep);}
+  .field input, .field select{
+    width:100%; padding:12px 14px; border:1.5px solid var(--line-strong); border-radius:4px;
+    font-family:var(--font-body); font-size:0.95rem; background:var(--paper); color:var(--ink);
+  }
+  .field input:focus, .field select:focus{border-color:var(--peacock);}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .chip-group{display:flex; gap:10px; flex-wrap:wrap;}
+  .chip{
+    padding:9px 16px; border-radius:20px; border:1.5px solid var(--line-strong);
+    font-size:0.86rem; background:var(--paper); color:var(--ink-soft);
+  }
+  .chip.selected{background:var(--indigo); color:var(--cream); border-color:var(--indigo);}
+  .form-nav{display:flex; justify-content:space-between; margin-top:28px;}
+  .btn-secondary{
+    background:none; border:1.5px solid var(--line-strong); padding:12px 22px; border-radius:4px; font-size:0.9rem;
+  }
+  .btn-secondary:hover{border-color:var(--indigo);}
+  .form-summary{padding:16px; background:var(--cream); border-radius:6px; font-size:0.9rem; margin-bottom:20px;}
+  .form-summary dt{font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; color:var(--ink-soft); margin-top:10px;}
+  .form-summary dd{font-weight:600; color:var(--indigo-deep);}
+  .success-msg{display:none; text-align:center; padding:20px 0;}
+  .success-msg.show{display:block;}
+  .success-msg .glyph-big{font-size:2.4rem; margin-bottom:10px;}
+
+  /* ============ TABLES (Cost / Pricing / Travel Details) ============ */
+  .table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:6px; background:var(--paper);}
+  table{width:100%; border-collapse:collapse; min-width:640px;}
+  th,td{text-align:left; padding:14px 16px; font-size:0.9rem; border-bottom:1px solid var(--line);}
+  th{
+    font-family:var(--font-mono); text-transform:uppercase; font-size:0.7rem; letter-spacing:0.06em;
+    color:var(--ink-soft); background:var(--cream);
+  }
+  tr:last-child td{border-bottom:none;}
+  td.price{font-family:var(--font-mono); font-weight:700; color:var(--rust);}
+
+  .pricing-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .price-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:28px;
+    box-shadow:var(--shadow-card); position:relative;
+  }
+  .price-card.featured{border-color:var(--marigold); box-shadow:0 0 0 2px var(--marigold), var(--shadow-card);}
+  .price-card .badge{
+    position:absolute; top:-12px; right:20px; background:var(--marigold); color:var(--indigo-deep);
+    font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; padding:5px 10px; border-radius:2px; font-weight:700;
+  }
+  .price-card .price{font-family:var(--font-display); font-size:2.2rem; color:var(--indigo-deep); margin:12px 0 4px;}
+  .price-card .price span{font-family:var(--font-mono); font-size:0.85rem; color:var(--ink-soft); font-weight:400;}
+  .price-card ul{margin:18px 0; list-style:none;}
+  .price-card ul li{padding:7px 0; font-size:0.88rem; color:var(--ink-soft); border-top:1px solid var(--line);}
+  .price-card ul li:first-child{border-top:none;}
+
+  /* ============ FOOD OPTIONS ============ */
+  .food-legend{display:flex; gap:20px; flex-wrap:wrap; margin-bottom:28px;}
+  .food-legend .item{display:flex; align-items:center; gap:8px; font-size:0.86rem; color:var(--ink-soft);}
+  .dot{width:10px; height:10px; border-radius:50%;}
+  .dot.yes{background:var(--peacock);}
+  .dot.no{background:var(--rust);}
+  .dot.part{background:var(--marigold-deep);}
+
+  /* ============ DEPARTURE BOARD (signature element) ============ */
+  .board{
+    background:var(--indigo-deep); border-radius:8px; padding:28px; overflow-x:auto;
+    box-shadow: inset 0 0 0 1px rgba(232,163,61,0.25);
+  }
+  .board-title{
+    font-family:var(--font-mono); color:var(--marigold); text-transform:uppercase; letter-spacing:0.12em;
+    font-size:0.78rem; margin-bottom:18px; display:flex; align-items:center; gap:10px;
+  }
+  .board-title::before{content:"●"; color:var(--rust); animation:blink 1.4s infinite;}
+  @keyframes blink{50%{opacity:0.25;}}
+  .board-table{width:100%; min-width:680px; border-collapse:collapse; font-family:var(--font-mono);}
+  .board-table th{
+    text-align:left; color:rgba(251,243,231,0.5); font-size:0.68rem; text-transform:uppercase;
+    letter-spacing:0.08em; padding:8px 12px; border-bottom:1px solid rgba(251,243,231,0.15);
+  }
+  .board-table td{
+    padding:12px; color:var(--marigold); font-size:0.92rem; border-bottom:1px solid rgba(251,243,231,0.08);
+    letter-spacing:0.03em;
+  }
+  .board-table td.route{color:var(--cream); font-family:var(--font-body); font-size:0.88rem;}
+  .board-table td.status{font-size:0.72rem; text-transform:uppercase;}
+  .board-table td.status.ontime{color:var(--peacock);}
+  .board-table td.status.board{color:var(--rust);}
+
+  /* ============ GROUP OPTIONS ============ */
+  .group-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+  .group-card{
+    background:var(--paper); border:2px solid var(--line); border-radius:8px; padding:24px 20px;
+    text-align:center; transition:border-color .15s ease, transform .15s ease;
+  }
+  .group-card:hover{transform:translateY(-3px);}
+  .group-card.selected{border-color:var(--indigo); background:var(--cream);}
+  .group-card .glyph{font-size:1.8rem; margin-bottom:12px;}
+  .group-card h3{font-size:1.05rem;}
+  .group-card p{font-size:0.85rem; color:var(--ink-soft); margin-top:6px;}
+  .group-select-btn{
+    margin-top:16px; width:100%; padding:10px; border-radius:4px; border:1.5px solid var(--line-strong);
+    font-size:0.85rem; background:none;
+  }
+  .group-card.selected .group-select-btn{background:var(--indigo); color:var(--cream); border-color:var(--indigo);}
+  .group-note{
+    margin-top:24px; padding:16px 20px; background:var(--cream); border-left:3px solid var(--marigold);
+    border-radius:4px; font-size:0.9rem; color:var(--ink-soft); display:none;
+  }
+  .group-note.show{display:block;}
+
+  footer{background:var(--indigo-deep); color:rgba(251,243,231,0.6); padding:40px 0; text-align:center; font-size:0.85rem;}
+
+  /* ============ MOBILE ============ */
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .home-highlights, .grid-3, .pricing-cards{grid-template-columns:1fr;}
+    .grid-2{grid-template-columns:1fr;}
+    .group-grid{grid-template-columns:1fr 1fr;}
+    .field-row{grid-template-columns:1fr;}
+    section{padding:44px 0;}
+    .hero{padding:64px 0 48px;}
+  }
+  @media (max-width:480px){
+    .group-grid{grid-template-columns:1fr;}
+    .form-shell{padding:24px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top-bar">
+    <a class="brand" href="#" data-tab-link="home">
+      <span class="brand-mark">भ</span>
+      <span class="brand-name">Bharat <em>Yatra</em></span>
+    </a>
+    <button class="book-cta" data-tab-link="registration">Start Planning</button>
+  </div>
+  <nav class="tabs-scroll">
+    <ul class="tabs" id="tabNav">
+      <li><button data-tab-link="home" class="active">Home</button></li>
+      <li><button data-tab-link="registration">Registration Form</button></li>
+      <li><button data-tab-link="destinations">Destinations</button></li>
+      <li><button data-tab-link="packages">Packages</button></li>
+      <li><button data-tab-link="single-packages">Single Packages</button></li>
+      <li><button data-tab-link="out-of-packages">Out of Packages Trips</button></li>
+      <li><button data-tab-link="travel-details">Travel Details</button></li>
+      <li><button data-tab-link="cost">Cost</button></li>
+      <li><button data-tab-link="pricing">Pricing</button></li>
+      <li><button data-tab-link="food-options">Food Options</button></li>
+      <li><button data-tab-link="travel-timing">Travel Timing</button></li>
+      <li><button data-tab-link="group-options">Group Options</button></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="wrap" style="max-width:none; padding:0;">
+
+  <!-- ============ HOME ============ -->
+  <section class="panel active" id="home" style="padding:0;">
+    <div class="hero">
+      <div class="jali"></div>
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow" style="color:var(--marigold);">India, end to end</span>
+            <h1>Every route, every rupee,<br><span>laid out before you board.</span></h1>
+            <p class="lede">From Himalayan passes to backwater houseboats — compare fixed packages, build your own trip, and see costs, food, and timings before you commit to a single ticket.</p>
+            <div class="hero-actions">
+              <button class="btn-primary" data-tab-link="registration">Begin Registration</button>
+              <button class="btn-ghost" data-tab-link="destinations">Browse Destinations</button>
+            </div>
+          </div>
+          <div>
+            <div class="hero-stat-card"><div class="num">28</div><div class="label">states covered, curated by local guides</div></div>
+            <div class="hero-stat-card"><div class="num">120+</div><div class="label">fixed &amp; custom itineraries live today</div></div>
+            <div class="hero-stat-card"><div class="num">4</div><div class="label">travel-companion formats — solo to group</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Where to start</span>
+          <h2>Three ways into a trip</h2>
+          <p>Whichever you pick, cost, food inclusion, and timing follow you through every screen — nothing is hidden until checkout.</p>
+        </div>
+        <div class="home-highlights">
+          <div class="h-card">
+            <div class="glyph">◆</div>
+            <h3>Fixed Single Packages</h3>
+            <p>Pre-built itineraries with set dates, stays, and transport. Pick, register, and go.</p>
+          </div>
+          <div class="h-card">
+            <div class="glyph">✎</div>
+            <h3>Out of Packages Trips</h3>
+            <p>Choose your own cities, nights, and add-ons. Priced piece by piece, built around you.</p>
+          </div>
+          <div class="h-card">
+            <div class="glyph">⛭</div>
+            <h3>Group Options</h3>
+            <p>Solo, couple, family, or a group tour with fellow travelers — pricing adjusts to fit.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ============ REGISTRATION FORM ============ -->
+  <section class="panel" id="registration">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Step 1 of the journey</span>
+        <h2>Registration</h2>
+        <p>Three short steps. Your details help us shortlist packages that actually fit your dates and budget.</p>
+      </div>
+
+      <form class="form-shell" id="regForm">
+        <div class="steps">
+          <div class="step current" id="bar1"></div>
+          <div class="step" id="bar2"></div>
+          <div class="step" id="bar3"></div>
+        </div>
+        <div class="step-labels">
+          <span id="lab1">Your details</span>
+          <span id="lab2">Travel preferences</span>
+          <span id="lab3">Confirm</span>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="form-step active" id="step1">
+          <div class="field">
+            <label for="fullName">Full name</label>
+            <input type="text" id="fullName" placeholder="e.g. Ananya Rao" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="email">Email address</label>
+              <input type="email" id="email" placeholder="you@email.com" required>
+            </div>
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" placeholder="+91 98xxx xxxxx" required>
+            </div>
+          </div>
+          <div class="form-nav" style="justify-content:flex-end;">
+            <button type="button" class="btn-primary" onclick="goStep(2)">Continue</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="form-step" id="step2">
+          <div class="field">
+            <label for="region">Preferred region</label>
+            <select id="region">
+              <option>Himalayan North</option>
+              <option>Golden Triangle (Delhi–Agra–Jaipur)</option>
+              <option>Kerala &amp; the Southern Coast</option>
+              <option>Rajasthan Desert Circuit</option>
+              <option>Northeast &amp; Tea Country</option>
+              <option>Not sure yet — recommend one</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="travelDate">Preferred travel month</label>
+              <input type="month" id="travelDate">
+            </div>
+            <div class="field">
+              <label for="budget">Budget per person (₹)</label>
+              <select id="budget">
+                <option>Under ₹25,000</option>
+                <option>₹25,000 – ₹60,000</option>
+                <option>₹60,000 – ₹1,20,000</option>
+                <option>₹1,20,000+</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Travel companions</label>
+            <div class="chip-group" id="chipGroup">
+              <button type="button" class="chip" data-val="Solo">Solo</button>
+              <button type="button" class="chip" data-val="Couple">Couple</button>
+              <button type="button" class="chip" data-val="Family">Family</button>
+              <button type="button" class="chip" data-val="Group">Group Tour</button>
+            </div>
+          </div>
+          <div class="form-nav">
+            <button type="button" class="btn-secondary" onclick="goStep(1)">Back</button>
+            <button type="button" class="btn-primary" onclick="goStep(3)">Review</button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="form-step" id="step3">
+          <dl class="form-summary" id="summaryBox"></dl>
+          <div class="form-nav">
+            <button type="button" class="btn-secondary" onclick="goStep(2)">Back</button>
+            <button type="button" class="btn-primary" onclick="submitReg()">Confirm registration</button>
+          </div>
+        </div>
+
+        <div class="success-msg" id="successBox">
+          <div class="glyph-big">✓</div>
+          <h3>You're registered</h3>
+          <p style="color:var(--ink-soft); margin-top:8px;">We'll match your preferences against live packages — check the Packages tab next.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ DESTINATIONS ============ -->
+  <section class="panel" id="destinations">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Where you'll go</span>
+        <h2>Destinations</h2>
+        <p>Attractions, the right season, and tips from travelers who've already done the route. Tap a card to expand.</p>
+      </div>
+      <div class="grid-3" id="destGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ PACKAGES (overview) ============ -->
+  <section class="panel" id="packages">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Two ways to book</span>
+        <h2>Packages</h2>
+        <p>Every trip on Bharat Yatra falls into one of two formats. Both show cost, food, and timing up front.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-art art-south"><span class="region-tag">Fixed itinerary</span></div>
+          <div class="card-body">
+            <h3>Single Packages</h3>
+            <p>A complete, pre-bundled trip — stays, transport, and a guide are locked in as one price. Best if you'd rather not plan logistics.</p>
+            <button class="link-more" data-tab-link="single-packages">See single packages →</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-art art-desert"><span class="region-tag">Build your own</span></div>
+          <div class="card-body">
+            <h3>Out of Packages Trips</h3>
+            <p>Pick cities, nights, and add-ons individually. Priced component by component, for travelers who want control.</p>
+            <button class="link-more" data-tab-link="out-of-packages">See custom trips →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SINGLE PACKAGES ============ -->
+  <section class="panel" id="single-packages">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Fixed &amp; bundled</span>
+        <h2>Single Packages</h2>
+        <p>One price, one itinerary. Everything listed below is included unless marked otherwise.</p>
+      </div>
+      <div class="grid-3" id="singlePkgGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ OUT OF PACKAGES TRIPS ============ -->
+  <section class="panel" id="out-of-packages">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Component by component</span>
+        <h2>Out of Packages Trips</h2>
+        <p>Start from a base route and add what you need. Nothing is bundled — you only pay for what you pick.</p>
+      </div>
+      <div class="grid-3" id="customPkgGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ TRAVEL DETAILS ============ -->
+  <section class="panel" id="travel-details">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">The fine print, upfront</span>
+        <h2>Travel Details</h2>
+        <p>A side-by-side view of what each trip format includes, so comparison doesn't mean opening ten tabs.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Trip</th><th>Format</th><th>Duration</th><th>Stay grade</th><th>Transport</th><th>Guide</th></tr></thead>
+          <tbody>
+            <tr><td>Golden Triangle Classic</td><td>Single Package</td><td>6N / 7D</td><td>4-star</td><td>AC coach + rail</td><td>Included</td></tr>
+            <tr><td>Kerala Backwater Escape</td><td>Single Package</td><td>5N / 6D</td><td>Houseboat + resort</td><td>AC coach + boat</td><td>Included</td></tr>
+            <tr><td>Rajasthan Desert Circuit</td><td>Single Package</td><td>7N / 8D</td><td>Heritage hotel</td><td>AC coach</td><td>Included</td></tr>
+            <tr><td>Himalayan Trails, Build-Your-Own</td><td>Out of Packages</td><td>3–10N flexible</td><td>You choose</td><td>You choose</td><td>Optional</td></tr>
+            <tr><td>South India Coastal, Build-Your-Own</td><td>Out of Packages</td><td>4–9N flexible</td><td>You choose</td><td>You choose</td><td>Optional</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COST ============ -->
+  <section class="panel" id="cost">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Per person, in ₹</span>
+        <h2>Cost</h2>
+        <p>Base cost before companion-type adjustments (see Group Options for how solo, couple, family, and group pricing differs).</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Trip</th><th>Base cost</th><th>Stay</th><th>Transport</th><th>Meals</th><th>Total</th></tr></thead>
+          <tbody>
+            <tr><td>Golden Triangle Classic</td><td class="price">₹28,500</td><td>₹14,000</td><td>₹6,500</td><td>₹4,000</td><td class="price">₹53,000</td></tr>
+            <tr><td>Kerala Backwater Escape</td><td class="price">₹22,000</td><td>₹16,500</td><td>₹5,200</td><td>₹3,300</td><td class="price">₹47,000</td></tr>
+            <tr><td>Rajasthan Desert Circuit</td><td class="price">₹31,000</td><td>₹19,000</td><td>₹7,800</td><td>Not included</td><td class="price">₹57,800</td></tr>
+            <tr><td>Himalayan Trails (custom, 5N base)</td><td class="price">from ₹18,000</td><td>Add-on</td><td>Add-on</td><td>Add-on</td><td class="price">from ₹18,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="panel" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Choose a tier</span>
+        <h2>Pricing</h2>
+        <p>Every itinerary can be booked at one of three service tiers. The trip stays the same — the comfort level changes.</p>
+      </div>
+      <div class="pricing-cards">
+        <div class="price-card">
+          <span class="eyebrow">Essential</span>
+          <h3>Standard</h3>
+          <div class="price">₹22,000<span>/ person</span></div>
+          <ul>
+            <li>3-star stays</li>
+            <li>Non-AC or shared transport</li>
+            <li>Breakfast only</li>
+            <li>Group check-in support</li>
+          </ul>
+          <button class="btn-secondary" style="width:100%;">Select Standard</button>
+        </div>
+        <div class="price-card featured">
+          <span class="badge">Most booked</span>
+          <span class="eyebrow">Balanced</span>
+          <h3>Comfort</h3>
+          <div class="price">₹41,500<span>/ person</span></div>
+          <ul>
+            <li>4-star stays</li>
+            <li>Private AC transport</li>
+            <li>Breakfast + dinner</li>
+            <li>Dedicated trip guide</li>
+          </ul>
+          <button class="btn-primary" style="width:100%;">Select Comfort</button>
+        </div>
+        <div class="price-card">
+          <span class="eyebrow">Full-service</span>
+          <h3>Signature</h3>
+          <div class="price">₹78,000<span>/ person</span></div>
+          <ul>
+            <li>5-star / heritage stays</li>
+            <li>Private car with driver</li>
+            <li>All meals included</li>
+            <li>Personal travel concierge</li>
+          </ul>
+          <button class="btn-secondary" style="width:100%;">Select Signature</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOD OPTIONS ============ -->
+  <section class="panel" id="food-options">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">No surprises at the table</span>
+        <h2>Food Options</h2>
+        <p>Meal inclusion varies by trip. Check this before you budget — "included" always means at least breakfast.</p>
+      </div>
+      <div class="food-legend">
+        <div class="item"><span class="dot yes"></span> Included</div>
+        <div class="item"><span class="dot part"></span> Partially included</div>
+        <div class="item"><span class="dot no"></span> Not included</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Trip</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Golden Triangle Classic</td><td>Included</td><td>Not included</td><td>Included</td><td>Local Rajasthani thali on day 3</td></tr>
+            <tr><td>Kerala Backwater Escape</td><td>Included</td><td>Included</td><td>Included</td><td>All meals on the houseboat</td></tr>
+            <tr><td>Rajasthan Desert Circuit</td><td>Included</td><td>Not included</td><td>Not included</td><td>Desert camp dinner sold separately</td></tr>
+            <tr><td>Himalayan Trails (custom)</td><td>Add-on</td><td>Add-on</td><td>Add-on</td><td>Choose per day while building the trip</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRAVEL TIMING (signature departure board) ============ -->
+  <section class="panel" id="travel-timing">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Departures</span>
+        <h2>Travel Timing</h2>
+        <p>Departure and arrival windows for each trip's opening leg. Full day-by-day timing is confirmed at booking.</p>
+      </div>
+      <div class="board">
+        <div class="board-title">Upcoming departures — live</div>
+        <div style="overflow-x:auto;">
+        <table class="board-table">
+          <thead><tr><th>Trip</th><th>Route</th><th>Depart</th><th>Arrive</th><th>Mode</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="route">Golden Triangle Classic</td><td class="route">Delhi → Agra</td><td>06:40</td><td>10:15</td><td>Rail</td><td class="status ontime">On time</td></tr>
+            <tr><td class="route">Golden Triangle Classic</td><td class="route">Agra → Jaipur</td><td>14:00</td><td>18:30</td><td>Road (AC coach)</td><td class="status ontime">On time</td></tr>
+            <tr><td class="route">Kerala Backwater Escape</td><td class="route">Kochi → Alleppey</td><td>09:15</td><td>11:45</td><td>Road</td><td class="status board">Boarding soon</td></tr>
+            <tr><td class="route">Rajasthan Desert Circuit</td><td class="route">Jodhpur → Jaisalmer</td><td>07:00</td><td>12:30</td><td>Road</td><td class="status ontime">On time</td></tr>
+            <tr><td class="route">Himalayan Trails (custom)</td><td class="route">Delhi → Manali</td><td>21:00</td><td>08:00 +1</td><td>Overnight Volvo</td><td class="status ontime">On time</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GROUP OPTIONS ============ -->
+  <section class="panel" id="group-options">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Who's coming</span>
+        <h2>Group Options</h2>
+        <p>Pricing, room configuration, and pace all adjust to who you're traveling with. Pick one to see the effect.</p>
+      </div>
+      <div class="group-grid" id="groupGrid">
+        <div class="group-card" data-group="Solo">
+          <div class="glyph">🧍</div>
+          <h3>Solo</h3>
+          <p>One room, your own pace, small single-traveler surcharge.</p>
+          <button class="group-select-btn">Choose Solo</button>
+        </div>
+        <div class="group-card" data-group="Couple">
+          <div class="glyph">🧑‍🤝‍🧑</div>
+          <h3>Couple</h3>
+          <p>Shared double room, standard per-person rate applies.</p>
+          <button class="group-select-btn">Choose Couple</button>
+        </div>
+        <div class="group-card" data-group="Family">
+          <div class="glyph">👨‍👩‍👧</div>
+          <h3>Family</h3>
+          <p>Connecting or triple rooms, child discounts, flexible pace.</p>
+          <button class="group-select-btn">Choose Family</button>
+        </div>
+        <div class="group-card" data-group="Group">
+          <div class="glyph">👥</div>
+          <h3>Group Tour</h3>
+          <p>Join fellow travelers on a fixed departure — lowest per-person cost.</p>
+          <button class="group-select-btn">Choose Group Tour</button>
+        </div>
+      </div>
+      <div class="group-note" id="groupNote"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">Bharat Yatra — a concept travel platform for India. Built for demonstration purposes.</div>
+</footer>
+
+<script>
+  /* ---------- DATA ---------- */
+  const destinations = [
+    {
+      name:"Jaipur, Rajasthan", art:"art-desert", region:"North · Desert",
+      attractions:["Amber Fort","City Palace","Hawa Mahal","Jal Mahal"],
+      bestTime:"October to March — cool, dry, and clear skies for fort visits.",
+      tips:["Bargain at Johari Bazaar, but start at 40% of the asking price.","Carry water; afternoons stay warm even in winter.","Visit Amber Fort at opening time to skip the elephant-queue crowds."]
+    },
+    {
+      name:"Kerala Backwaters", art:"art-south", region:"South · Coastal",
+      attractions:["Alleppey houseboat cruise","Kumarakom bird sanctuary","Fort Kochi","Munnar tea gardens"],
+      bestTime:"September to March — post-monsoon greenery, low humidity.",
+      tips:["Book houseboats a week ahead in peak December–January season.","Ayurvedic massages are worth a half-day; book at your resort, not a street stall.","Pack light cottons — humidity stays high even in cooler months."]
+    },
+    {
+      name:"Manali, Himachal", art:"art-himalaya", region:"North · Himalaya",
+      attractions:["Solang Valley","Rohtang Pass","Old Manali cafes","Hadimba Temple"],
+      bestTime:"March to June and September to November — Rohtang shuts in heavy winter snow.",
+      tips:["Acclimatize a day before heading to higher passes.","Overnight Volvo buses from Delhi save a hotel night — book window seats.","Carry cash; card acceptance thins out past Old Manali."]
+    },
+    {
+      name:"Varanasi, Uttar Pradesh", art:"art-north", region:"North · Ganges",
+      attractions:["Dashashwamedh Ghat aarti","Sarnath","Kashi Vishwanath Temple","Boat sunrise ride"],
+      bestTime:"November to February — the summer heat here is severe.",
+      tips:["Take the sunrise boat ride, not sunset — the ghats are calmer and light is better.","Dress modestly near temple areas.","Guides at the ghats will approach you directly; agree on a price before starting."]
+    },
+    {
+      name:"Goa", art:"art-west", region:"West · Coast",
+      attractions:["Baga & Anjuna beaches","Basilica of Bom Jesus","Dudhsagar Falls","Fontainhas quarter"],
+      bestTime:"November to February — dry season, sea calm enough for water sports.",
+      tips:["North Goa is livelier, South Goa is quieter — pick based on your pace.","Rent a scooter for real flexibility; helmets are legally required.","Avoid the monsoon (June–September) for beach-focused trips."]
+    },
+    {
+      name:"Darjeeling & Sikkim", art:"art-east", region:"East · Tea Country",
+      attractions:["Tiger Hill sunrise","Darjeeling toy train","Tsomgo Lake","Tea estate walks"],
+      bestTime:"March to May and October to mid-December — clearest mountain views.",
+      tips:["Sikkim requires an inner-line permit for some areas — arrange this in advance.","Layer clothing; mornings are cold even in the warmer months.","Book the toy train seats early; they sell out during peak season."]
+    }
+  ];
+
+  const singlePackages = [
+    {name:"Golden Triangle Classic", art:"art-north", meta:"6N / 7D · Delhi → Agra → Jaipur", desc:"The essential first-timer route: three cities, iconic monuments, comfortable pacing.", food:"food-part", foodLabel:"Breakfast + some dinners"},
+    {name:"Kerala Backwater Escape", art:"art-south", meta:"5N / 6D · Kochi → Alleppey → Munnar", desc:"Houseboat nights, hill-station mornings, and a slower, greener version of India.", food:"food-yes", foodLabel:"All meals included"},
+    {name:"Rajasthan Desert Circuit", art:"art-desert", meta:"7N / 8D · Jodhpur → Jaisalmer → Udaipur", desc:"Forts, dunes, and lake palaces — heritage stays throughout.", food:"food-no", foodLabel:"Breakfast only"}
+  ];
+
+  const customPackages = [
+    {name:"Himalayan Trails, Build-Your-Own", art:"art-himalaya", meta:"3–10N flexible · Delhi → Manali → Spiti", desc:"Start from a base route through the mountains and add stops, transport class, and meals as you like.", food:"food-part", foodLabel:"Choose per day"},
+    {name:"South India Coastal, Build-Your-Own", art:"art-south", meta:"4–9N flexible · Goa → Gokarna → Coorg", desc:"A coastal-to-hill-country route with modular nights — extend or shorten any leg freely.", food:"food-part", foodLabel:"Choose per day"},
+    {name:"Northeast Explorer, Build-Your-Own", art:"art-east", meta:"5–8N flexible · Guwahati → Shillong → Kaziranga", desc:"Tea gardens, waterfalls, and wildlife — components priced individually, permits handled for you.", food:"food-no", foodLabel:"Not included by default"}
+  ];
+
+  /* ---------- TAB NAVIGATION ---------- */
+  function showTab(id){
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('#tabNav button').forEach(b => b.classList.toggle('active', b.dataset.tabLink === id));
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-tab-link]').forEach(el=>{
+    el.addEventListener('click', e=>{ e.preventDefault(); showTab(el.dataset.tabLink); });
+  });
+
+  /* ---------- RENDER DESTINATIONS ---------- */
+  const destGrid = document.getElementById('destGrid');
+  destinations.forEach((d,i)=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-art ${d.art}"><span class="region-tag">${d.region}</span></div>
+      <div class="card-body">
+        <h3>${d.name}</h3>
+        <button class="link-more" data-toggle="dest-${i}">View attractions &amp; tips →</button>
+        <div class="detail-panel" id="dest-${i}">
+          <h4>Popular attractions</h4>
+          <ul>${d.attractions.map(a=>`<li>${a}</li>`).join('')}</ul>
+          <h4>Best time to visit</h4>
+          <p style="font-size:0.92rem; color:var(--ink-soft); margin-top:4px;">${d.bestTime}</p>
+          <h4>Traveler tips</h4>
+          <ul>${d.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+        </div>
+      </div>`;
+    destGrid.appendChild(card);
+  });
+
+  document.addEventListener('click', e=>{
+    const btn = e.target.closest('[data-toggle]');
+    if(!btn) return;
+    const panel = document.getElementById(btn.dataset.toggle);
+    const open = panel.classList.toggle('open');
+    btn.textContent = open ? 'Hide details ←' : 'View attractions & tips →';
+  });
+
+  /* ---------- RENDER PACKAGE GRIDS ---------- */
+  function renderPkg(list, gridId){
+    const grid = document.getElementById(gridId);
+    list.forEach(p=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-art ${p.art}"><span class="region-tag">${p.meta.split(' · ')[0]}</span></div>
+        <div class="card-body">
+          <h3>${p.name}</h3>
+          <div class="meta">${p.meta}</div>
+          <p>${p.desc}</p>
+          <div class="tag-row">
+            <span class="tag ${p.food}">${p.foodLabel}</span>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+  renderPkg(singlePackages, 'singlePkgGrid');
+  renderPkg(customPackages, 'customPkgGrid');
+
+  /* ---------- REGISTRATION FORM ---------- */
+  let selectedCompanion = null;
+  document.getElementById('chipGroup').addEventListener('click', e=>{
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    document.querySelectorAll('#chipGroup .chip').forEach(c=>c.classList.remove('selected'));
+    chip.classList.add('selected');
+    selectedCompanion = chip.dataset.val;
+  });
+
+  function goStep(n){
+    [1,2,3].forEach(i=>{
+      document.getElementById('step'+i).classList.toggle('active', i===n);
+      const bar = document.getElementById('bar'+i);
+      bar.classList.remove('current','done');
+      if(i < n) bar.classList.add('done');
+      if(i === n) bar.classList.add('current');
+    });
+    if(n === 3){
+      const name = document.getElementById('fullName').value || '—';
+      const email = document.getElementById('email').value || '—';
+      const phone = document.getElementById('phone').value || '—';
+      const region = document.getElementById('region').value;
+      const month = document.getElementById('travelDate').value || 'Flexible';
+      const budget = document.getElementById('budget').value;
+      const companion = selectedCompanion || 'Not selected';
+      document.getElementById('summaryBox').innerHTML = `
+        <dt>Name</dt><dd>${name}</dd>
+        <dt>Email</dt><dd>${email}</dd>
+        <dt>Phone</dt><dd>${phone}</dd>
+        <dt>Preferred region</dt><dd>${region}</dd>
+        <dt>Travel month</dt><dd>${month}</dd>
+        <dt>Budget</dt><dd>${budget}</dd>
+        <dt>Travel companions</dt><dd>${companion}</dd>`;
+    }
+  }
+
+  function submitReg(){
+    document.getElementById('regForm').querySelectorAll('.form-step, .steps, .step-labels').forEach(el=>el.style.display='none');
+    document.getElementById('successBox').classList.add('show');
+  }
+
+  /* ---------- GROUP OPTIONS ---------- */
+  const groupNotes = {
+    Solo: "Solo pricing adds a single-occupancy supplement (roughly 20–25% above per-person twin-share rate) since accommodation is priced per room, not per head.",
+    Couple: "Couple pricing is the standard per-person rate, based on twin-share rooms — no supplement applied.",
+    Family: "Family pricing includes discounted or free stays for children under 12 sharing a room with two adults, plus flexible daily pacing.",
+    Group: "Group Tour pricing is the lowest per-person cost — you join a fixed-departure cohort of fellow travelers, splitting shared transport and guide costs."
+  };
+  document.getElementById('groupGrid').addEventListener('click', e=>{
+    const card = e.target.closest('.group-card');
+    if(!card) return;
+    document.querySelectorAll('.group-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    const note = document.getElementById('groupNote');
+    note.textContent = groupNotes[card.dataset.group];
+    note.classList.add('show');
+  });
+</script>
+</body>
+</html>
